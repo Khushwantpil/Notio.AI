@@ -5,8 +5,11 @@ import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../utils/firebase';
 import { serverUrl } from '../App';
 import axios from 'axios';
-function Auth() {
+import { useDispatch } from 'react-redux';
+import { setUserdata } from '../redux/userSlice';
 
+function Auth() {
+    const dispatch = useDispatch();
     const handelGoogleAuth = async() => {
         try {
             const response = await signInWithPopup(auth, provider);
@@ -16,7 +19,8 @@ function Auth() {
             const result = await axios.post(serverUrl +"/api/auth/google", { name, email},{
                 withCredentials: true
             })
-            console.log(result.data);
+            dispatch(setUserdata(result.data));
+           
         } catch (error) {
             console.error("Google Sign-In Error:", error);
         }
@@ -24,9 +28,9 @@ function Auth() {
   return (
     <div className='min-h-screen overflow-hidden bg-white text-black px-4 py-8'>
         <motion.header 
-        initial={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
+        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
         className='max-w-7xl mx-auto mt-8
         rounded-2xl
         bg-black/80 backdrop-blur-xl
@@ -44,22 +48,21 @@ function Auth() {
         <main className='max-w-7xl mx-auto py-10 grid grid-cols-1 md:grid-cols-2 gap-20 items-center'>
             {/* left content */}
             <motion.div
-             initial={{ opacity: 0, x: -70 }}
+             initial={{ opacity: 0, x: -50 }}
              animate={{ opacity: 1, x: 0 }}
-             transition={{ duration: 0.85}}>
+             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}>
                 <h1 className='text-5xl lg:text-6xl font-extrabold leading-tight
                 bg-gradient-to-br from-black/90 via-black/60 to-black/90
                 bg-clip-text text-transparent'> Unlock Smart <br/> AI Notes </h1>
                 <motion.button 
                 onClick={handelGoogleAuth}
                 whileHover={{
-                    y : -10,
-                    rotateX : 10,
-                    rotateY : -10,
-                    scale : 1.05
+                    y: -5,
+                    scale: 1.02,
+                    boxShadow: "0 30px 60px rgba(0,0,0,0.8)"
                 }}
-                whileTap={{scale: 0.95}}
-                transition={{type: "spring", stiffness: 200, damping: 18}}
+                whileTap={{scale: 0.98}}
+                transition={{type: "spring", stiffness: 300, damping: 20}}
                     className='mt-10 px-10 py-3 rounded-xl
                 flex items-center gap-3 
                 bg-gradient-to-r from-black/90 via-black/60 to-black/90
@@ -80,12 +83,16 @@ function Auth() {
             </motion.div>
 
             {/* right content */}
-            <div className='grid grid-cols-1 sm:grid-cols-2 gap-8'>
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+              className='grid grid-cols-1 sm:grid-cols-2 gap-8'>
                 <Feature icon="🎁" title="100 Free Credits" des ="Start your journey with 100 free credits to explore our AI-powered study tools." />
                 <Feature icon="📜" title="AI Powered Notes" des ="Generate comprehensive notes using our AI-powered study tools." />
                 <Feature icon="📊" title="Mind Maps & Graphs" des ="Visualize your study material with interactive mind maps and graphs." />
                 <Feature icon="📩" title="With Download Feature" des ="Download your generated study materials for offline access." />                
-            </div>
+            </motion.div>
         </main> 
     </div>
   )
@@ -94,12 +101,11 @@ function Feature({icon, title, des}) {
     return (
         <motion.div 
          whileHover={{
-                    y : -12,
-                    rotateX : 10,
-                    rotateY : -10,
-                    scale : 1.05
+                    y: -5,
+                    scale: 1.02,
+                    boxShadow: "0 20px 40px rgba(0,0,0,0.6)"
                 }}
-                transition={{type: "spring", stiffness: 200, damping: 18}}
+                transition={{type: "spring", stiffness: 300, damping: 20}}
         className='relative rounded-b-2xl p-6
         bg-gradient-to-br from-black/90 via-black/80 to-black/90
         backdrop-blur-2xl
