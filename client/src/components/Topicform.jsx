@@ -1,0 +1,118 @@
+import React from 'react'
+import{motion} from 'motion/react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
+function Topicform({setResult, setLoading, loading, setError}) {
+    const [topic, setTopic] = React.useState('');
+    const[classlevel, setClassLevel] = React.useState('');
+    const[ExamType, setExamType] = React.useState('');
+    const[RevisionMode, setRevisionMode] = React.useState('');
+    const[IncludeDiagrams, setIncludeDiagrams] = React.useState(false);
+    const[IncludeCharts, setIncludeCharts] = React.useState(false);
+  return (
+    <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    className='rounded-2xl
+    bg-gradient-to-br from-black/90 via-black/60 to-black/90 backdrop-blur-2xl
+    border border-white/10
+    shadow-[0_25px_60px_rgba(0,0,0,0.75)]
+    p-8 space-y-6 
+    text-white'>
+        <input type="text" className='w-full p-3 rounded-xl
+        bg-white/10 backdrop-blur-lg
+        border border-white/20
+        placeholder-gray-400
+        text-white 
+        focus: outline-none focus:ring-2 focus:ring-white/30 '
+        placeholder = "Enter a topic...(E.g., Python Programming)" 
+        onChange={(e) => setTopic(e.target.value)}
+        value={topic}
+        />
+
+         <input type="text" className='w-full p-3 rounded-xl
+        bg-white/10 backdrop-blur-lg
+        border border-white/20
+        placeholder-gray-400
+        text-white 
+        focus: outline-none focus:ring-2 focus:ring-white/30' 
+        placeholder = "Class/ Level (E.g., Class 12, Undergraduate)" 
+        onChange={(e) => setClassLevel(e.target.value)}
+        value={classlevel}
+        />
+
+         <input type="text" className='w-full p-3 rounded-xl
+        bg-white/10 backdrop-blur-lg
+        border border-white/20
+        placeholder-gray-400
+        text-white 
+        focus: outline-none focus:ring-2 focus:ring-white/30'
+        placeholder = "Exam Type (E.g., CBSE, Semester, JEE)" 
+        onChange={(e) => setExamType(e.target.value)}
+        value={ExamType}
+        />
+
+        <div className='flex flex-col md:flex-row gap-6'>
+        <Toggle label="Revision Mode" checked={RevisionMode} onChange={() => setRevisionMode(!RevisionMode)} />
+
+        <Toggle label="Include Diagrams" checked={IncludeDiagrams} onChange={() => setIncludeDiagrams(!IncludeDiagrams)} />
+
+        <Toggle label="Include Charts" checked={IncludeCharts} onChange={() => setIncludeCharts(!IncludeCharts)} />
+        </div>
+<motion.button
+whileHover = {!loading ? {scale: 1.01} : {}}
+whileTap={!loading? {scale:0.95} : {}}
+disabled={loading}
+className={`w-full py-3 rounded-xl mt-4
+font-semibold
+flex items-center justify-center gap-3
+transition
+${loading ? 
+'bg-gray-300 text-gray-600 cursor-not-allowed' 
+: 'bg-gradient-to-br from-white to-gray-200 text-black shadow-[0_35px_35px_rgba(0,0,0,0.4)]'}`}>
+{loading ? 'Generating Notes...' : 'Generate Notes'}
+</motion.button>
+    </motion.div>
+  )
+}
+
+function Toggle({label, checked, onChange}) {
+    return (
+        <div className='flex items-center gap-4 cursor-pointer select-none' onClick={onChange}> 
+        <motion.div
+        animate={{
+            backgroundColor: checked ? 
+            "rgba(34,197,94,0.35)"  // Green with 35% opacity
+            : "rgba(255,255,255,0.15)", // White with 15% opacity
+        }}
+        transition={{duration: 0.25}}
+        className='relative w-12 h-6 rounded-full
+        border border-white/20
+        backdrop-blur-lg
+        '
+        >
+            <motion.div 
+            layout
+            transition={{type: "spring", stiffness: 500, damping : 30}}
+            className='absolute top-0.5
+            h-5 w-5 rounded-full
+            bg-white 
+            shadow-[0_5px_15px_rgba(0,0,0,0.5)]'
+            style={{
+                left: checked ?"1.6rem" : "0.25rem",
+            }}
+            >
+               
+            </motion.div>
+             
+        </motion.div>
+            <span 
+                className={`text-sm transition-colors ${checked ? 'text-green-400' : 'text-gray-300'}`}>
+                    {label}
+                </span>
+
+        </div>
+    )
+}
+export default Topicform
